@@ -12,6 +12,12 @@ services:
         - "5672:5672"
       networks:
         - fishtanksuite
+  pufferfish:
+      build: "pufferfish/"
+      ports:
+        - "1344:1344"
+      networks:
+        - fishtanksuite
   elasticsearch:
     build: elasticsearch/
     ports:
