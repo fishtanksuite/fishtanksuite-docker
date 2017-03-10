@@ -18,6 +18,10 @@ services:
         - "1344:1344"
       networks:
         - fishtanksuite
+  triggerfish:
+      build: "triggerfish/"
+      networks:
+        - fishtanksuite
   elasticsearch:
     build: elasticsearch/
     ports:
