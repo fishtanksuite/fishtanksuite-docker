@@ -1,0 +1,58 @@
+version: '2'
+
+services:
+  rabbitmq:
+      image: "rabbitmq:management"
+      environment:
+        RABBITMQ_DEFAULT_USER: "rabbitmq"
+        RABBITMQ_DEFAULT_PASS: "rabbitmq"
+        RABBITMQ_DEFAULT_VHOST: "/"
+      ports:
+        - "15672:15672"
+        - "5672:5672"
+      #volumes:
+        #- "./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins"
+        #- "./rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro"
+      networks:
+        - fishtanksuite
+  elasticsearch:
+    build: elasticsearch/
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      # disable X-Pack
+      # see https://www.elastic.co/guide/en/x-pack/current/xpack-settings.html
+      #     https://www.elastic.co/guide/en/x-pack/current/installing-xpack.html#xpack-enabling
+      xpack.security.enabled: "false"
+      xpack.monitoring.enabled: "false"
+      xpack.graph.enabled: "false"
+      xpack.watcher.enabled: "false"
+    networks:
+      - fishtanksuite
+  logstash:
+    build: logstash/
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5000:5000"
+    networks:
+      - fishtanksuite
+    depends_on:
+      - elasticsearch
+  kibana:
+    build: kibana/
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config
+    ports:
+      - "5601:5601"
+    networks:
+      - fishtanksuite
+    depends_on:
+      - elasticsearch
+
+networks:
+  fishtanksuite:
+    driver: bridge
