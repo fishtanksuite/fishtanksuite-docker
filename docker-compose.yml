@@ -1,27 +1,6 @@
-version: '2'
+version: "3"
 
 services:
-  rabbitmq:
-      image: "rabbitmq:management"
-      environment:
-        RABBITMQ_DEFAULT_USER: "rabbitmq"
-        RABBITMQ_DEFAULT_PASS: "rabbitmq"
-        RABBITMQ_DEFAULT_VHOST: "/"
-      ports:
-        - "15672:15672"
-        - "5672:5672"
-      networks:
-        - fishtanksuite
-  pufferfish:
-      build: "pufferfish/"
-      ports:
-        - "1344:1344"
-      networks:
-        - fishtanksuite
-  triggerfish:
-      build: "triggerfish/"
-      networks:
-        - fishtanksuite
   elasticsearch:
     build: elasticsearch/
     ports:
@@ -59,6 +38,44 @@ services:
       - fishtanksuite
     depends_on:
       - elasticsearch
+  rabbitmq:
+      image: "rabbitmq:management"
+      environment:
+        RABBITMQ_DEFAULT_USER: "rabbitmq"
+        RABBITMQ_DEFAULT_PASS: "rabbitmq"
+        RABBITMQ_DEFAULT_VHOST: "/"
+      ports:
+        - "15672:15672"
+        - "5672:5672"
+      networks:
+        - fishtanksuite
+      depends_on:
+        - elasticsearch
+  pufferfish:
+      build: "pufferfish/"
+      ports:
+        - "1344:1344"
+      networks:
+        - fishtanksuite
+      depends_on:
+        - rabbitmq
+  triggerfish:
+      build: "triggerfish/"
+      networks:
+        - fishtanksuite
+      depends_on:
+        - elasticsearch
+  piranhafish:
+      build: "piranhafish/"
+      environment:
+        GITLAB_OMNIBUS_CONFIG: |
+          external_url 'http://127.0.0.1'
+      ports:
+        - "80:80"
+        - "443:443"
+        - "22:22"
+      networks:
+        - fishtanksuite
 
 networks:
   fishtanksuite:
