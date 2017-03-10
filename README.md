@@ -13,9 +13,8 @@
 
 ## To Do
 
-- [ ] ELK Stack with Configuration
+- [ ] ELK Stack with Configuration (and Hook)
 - [ ] RabbitMQ with Configuration
 - [ ] Squid Proxy with Configuration and installed Mandarinfish / Pufferfish
 - [ ] Piranhafish (Gitlab) instance and the GIT Hooks/Repos to it
-- [ ] Triggerfish Container
-- [ ] Fake C&C Container (According to needs -> Example Fake C&C)
+- [ ] Triggerfish Container with Config (Hook)
