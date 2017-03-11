@@ -83,7 +83,7 @@ services:
     networks:
       - fishtanksuite
     depends_on:
-      - pufferfish        
+      - elasticsearch
 
 networks:
   fishtanksuite:
