@@ -1,0 +1,43 @@
+# TEMPLATED CONFIGURATION FILE. UPDATED ON EACH RUN.
+
+# Default all logs to stdout and stderr
+logfile_rotate 0
+access_log stdio:/dev/stdout combined
+cache_store_log stdio:/dev/stdout
+cache_log /dev/stderr
+netdb_filename stdio:/var/cache/squid4/netdb.state
+
+# Visible hostname to allow multi-squid
+visible_hostname squid
+
+{% if DISABLE_CACHE|default:"" != "yes" %}
+# Cache directory is fixed since we'll bind mount.
+cache_dir aufs /var/cache/squid4 {{MAX_CACHE_SIZE|default:"40000"}} 16 256
+{% endif %}
+
+maximum_object_size {{MAX_OBJECT_SIZE|default:"1536 MB"}}
+cache_mem {{MEM_CACHE_SIZE|default:"128 MB"}}
+
+tls_outgoing_options capath=/etc/ssl/certs \
+    options=NO_SSLv3,NO_TLSv1 \
+    cipher=ALL:!RC4:!aNULL:!eNULL:!LOW:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS
+
+http_port {{HTTP_PORT}} ssl-bump \
+    generate-host-certificates=on \
+    dynamic_cert_mem_cache_size=4MB \
+    cert=/etc/squid4/ssl_cert/myca.pem
+
+
+ssl_bump server-first all
+
+http_access allow all
+
+# ICAP Logging
+icap_enable on
+icap_service_failure_limit -1
+icap_preview_enable off
+icap_persistent_connections on
+icap_service pufferfish1 reqmod_precache icap://pufferfish:1344/log_requests bypass=0 on-overload=wait
+icap_service pufferfish2 respmod_precache icap://pufferfish:1344/log_responses bypass=0 on-overload=wait
+adaptation_access pufferfish1 allow all
+adaptation_access pufferfish2 allow all

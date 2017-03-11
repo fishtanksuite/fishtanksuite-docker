@@ -76,6 +76,14 @@ services:
         - "22:22"
       networks:
         - fishtanksuite
+  squid:
+    build: "squid/"
+    ports:
+      - "3128:3128"
+    networks:
+      - fishtanksuite
+    depends_on:
+      - pufferfish        
 
 networks:
   fishtanksuite:
