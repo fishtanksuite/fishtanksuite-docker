@@ -50,7 +50,7 @@ services:
       networks:
         - fishtanksuite
       depends_on:
-        - elasticsearch
+        - logstash
   pufferfish:
       build: "pufferfish/"
       ports:
@@ -58,7 +58,7 @@ services:
       networks:
         - fishtanksuite
       depends_on:
-        - rabbitmq
+        - rabbitmq  
   triggerfish:
       build: "triggerfish/"
       networks:
@@ -76,6 +76,8 @@ services:
         - "22:22"
       networks:
         - fishtanksuite
+      depends_on:
+        - elasticsearch
   squid:
     build: "squid/"
     ports:
@@ -83,7 +85,7 @@ services:
     networks:
       - fishtanksuite
     depends_on:
-      - elasticsearch
+      - pufferfish
 
 networks:
   fishtanksuite:
