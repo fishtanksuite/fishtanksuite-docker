@@ -86,7 +86,7 @@ if [ "$PROXYCHAIN" = "yes" ] && [ "$CONFIG_DISABLE" != "yes" ]; then
     else
         echo "strict_chain" >> /etc/proxychains.conf
     fi
-    
+
     echo "[ProxyList]" >> /etc/proxychains.conf
     env | grep 'PROXYCHAIN_PROXY' | sort | while read proxyline; do
         echo "# $proxyline " >> /etc/squid4/squid.conf
@@ -96,7 +96,7 @@ if [ "$PROXYCHAIN" = "yes" ] && [ "$CONFIG_DISABLE" != "yes" ]; then
 else
     echo "/etc/proxychains.conf : CONFIGURATION TEMPLATING IS DISABLED"
 fi
-
+forever start ./mandarinfish-router/app.js
 # Build the configuration directories if needed
 squid -z -N
 
@@ -104,10 +104,12 @@ if [ "$PROXYCHAIN" = "yes" ]; then
     if [ ! -e /etc/proxychains.conf ]; then
         echo "ERROR: /etc/proxychains.conf does not exist. Squid with proxychains will not work."
         exit 1
-    fi 
+    fi
     # Start squid with proxychains
     exec proxychains4 squid -N
 else
     # Start squid normally
     exec squid -N
 fi
+
+forever start ./mandarinfish-router/app.js

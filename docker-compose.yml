@@ -58,7 +58,7 @@ services:
       networks:
         - fishtanksuite
       depends_on:
-        - rabbitmq  
+        - rabbitmq
   triggerfish:
       build: "triggerfish/"
       networks:
@@ -78,10 +78,12 @@ services:
         - fishtanksuite
       depends_on:
         - elasticsearch
-  squid:
+  mandarinfish:
     build: "squid/"
+    privileged: true
     ports:
       - "3128:3128"
+      - "3000:3000"
     networks:
       - fishtanksuite
     depends_on:
