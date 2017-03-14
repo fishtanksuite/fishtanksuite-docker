@@ -14,7 +14,7 @@
 ## To Do
 
 - [ ] ELK Stack with Configuration (and Hook)
-- [ ] RabbitMQ with Configuration
-- [ ] Squid Proxy with Configuration and installed Mandarinfish / Pufferfish
+- [x] RabbitMQ with Configuration
+- [x] Squid Proxy with Configuration and installed Mandarinfish / Pufferfish
 - [ ] Piranhafish (Gitlab) instance and the GIT Hooks/Repos to it
 - [ ] Triggerfish Container with Config (Hook)
