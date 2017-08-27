@@ -99,7 +99,7 @@ fi
 forever start ./mandarinfish-router/app.js
 # Build the configuration directories if needed
 squid -z -N
-
+squid -k shutdown
 if [ "$PROXYCHAIN" = "yes" ]; then
     if [ ! -e /etc/proxychains.conf ]; then
         echo "ERROR: /etc/proxychains.conf does not exist. Squid with proxychains will not work."
