@@ -111,5 +111,3 @@ else
     # Start squid normally
     exec squid -N
 fi
-
-forever start ./mandarinfish-router/app.js
