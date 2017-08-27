@@ -2,12 +2,12 @@ version: "3"
 
 services:
   elasticsearch:
-    build: elasticsearch/
+    image: "fishtanksuite/elasticsearch"
     ports:
       - "9200:9200"
       - "9300:9300"
     environment:
-      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
       # disable X-Pack
       # see https://www.elastic.co/guide/en/x-pack/current/xpack-settings.html
       #     https://www.elastic.co/guide/en/x-pack/current/installing-xpack.html#xpack-enabling
@@ -18,7 +18,7 @@ services:
     networks:
       - fishtanksuite
   logstash:
-    build: logstash/
+    image: "fishtanksuite/logstash"
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logstash/pipeline:/usr/share/logstash/pipeline
@@ -29,7 +29,7 @@ services:
     depends_on:
       - elasticsearch
   kibana:
-    build: kibana/
+    image: "fishtanksuite/kibana"
     volumes:
       - ./kibana/config/:/usr/share/kibana/config
     ports:
@@ -52,7 +52,7 @@ services:
       depends_on:
         - logstash
   pufferfish:
-      build: "pufferfish/"
+      image: "fishtanksuite/pufferfish"
       ports:
         - "1344:1344"
       networks:
@@ -60,26 +60,26 @@ services:
       depends_on:
         - rabbitmq
   triggerfish:
-      build: "triggerfish/"
+      image: "fishtanksuite/triggerfish"
       networks:
         - fishtanksuite
       depends_on:
         - elasticsearch
   piranhafish:
-      build: "piranhafish/"
+      image: "fishtanksuite/piranhafish"
       environment:
         GITLAB_OMNIBUS_CONFIG: |
           external_url 'http://127.0.0.1'
       ports:
         - "80:80"
         - "443:443"
-        - "22:22"
+        - "2222:22"
       networks:
         - fishtanksuite
       depends_on:
-        - elasticsearch
+        - kibana
   mandarinfish:
-    build: "squid/"
+    image: "fishtanksuite/squid"
     privileged: true
     ports:
       - "3128:3128"
